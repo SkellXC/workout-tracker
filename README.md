@@ -1,82 +1,58 @@
-# **Workout Tracker**
+# Workout Tracker
 
-A simple Tkinter-based **Workout Tracker** application that allows users to navigate between multiple pages (Home and Settings) and track their workout routines. The app provides a navigation bar with buttons to switch between different pages.
+A Tkinter desktop app for logging weight training sets and viewing progress over time, backed by a local SQLite database.
 
-## **Table of Contents**
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Technologies Used](#technologies-used)
-- [License](#license)
+## Requirements
 
-## **Installation**
+- Python 3
+- tkinter (included with most Python installs; on Linux, install separately, e.g. `sudo apt install python3-tk`)
+- matplotlib
+- numpy
 
-1. Clone this repository:
-    ```bash
-    git clone https://github.com/your-username/workout-tracker.git
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd workout-tracker
-    ```
-3. Install the necessary dependencies:
-    ```bash
-    pip install tkinter
-    ```
+## Setup
 
-## **Usage**
+```
+git clone https://github.com/SkellXC/My-NEA.git
+cd My-NEA
+pip install matplotlib numpy
+python gui.py
+```
 
-1. Run the application:
-    ```bash
-    python app.py
-    ```
-2. The app will start with the **Home Page**, and you can navigate to the **Settings Page** using the buttons in the top navigation bar.
+`workout.db` is created automatically in the working directory on first run if it doesn't already exist.
 
-## **Features**
+## Usage
 
-- **Home Page:** The main landing page with a "Go to Settings" button.
-- **Settings Page:** Contains options to navigate back to the Home page.
-- **Top Navigation Bar:** Includes buttons for navigating between pages.
-- **Bottom Bar:** Contains a floating plus button (could be used for adding workout data in future updates).
+- **Home** — shows the last 4 sets logged today, and a button to open the progress graph.
+- **+ (bottom bar)** — opens the exercise picker, grouped by muscle group (Chest, Back, Legs). Selecting an exercise opens its logging page.
+- **Exercise page** — set weight and reps with the +/- controls (weight in steps of 5, reps in steps of 1), then Save to log the set with today's date.
+- **Graph page** — pick an exercise from the dropdown and plot its logged weight over time (opens in a separate matplotlib window).
+- **Settings** — KG/LBS toggle buttons are present but not yet wired to any functionality.
 
-## **Screenshots**
+## Data
 
-### Home Page
-![Home Page Screenshot](screenshots/homepage.png)
+All sets are stored in a single SQLite table:
 
-### Settings Page
-![Settings Page Screenshot](screenshots/settingspage.png)
+```sql
+CREATE TABLE exercises (
+    id INTEGER PRIMARY KEY,
+    exerciseName TEXT NOT NULL,
+    weight INTEGER NOT NULL,
+    repetitions INTEGER NOT NULL,
+    date TEXT NOT NULL
+)
+```
 
-## **Technologies Used**
+## Project structure
 
-- **Python**: Programming language
-- **Tkinter**: GUI library for creating the user interface
-- **Pillow (optional)**: Image manipulation (if you plan to add images/icons)
+| Path | Purpose |
+|---|---|
+| `gui.py` | Entire application — UI, navigation, and database logic |
+| `workout.db` | SQLite database, created/used at runtime |
+| `.devdbrc` | Config for the DevDb editor extension, for inspecting `workout.db` directly |
+| `Old/` | Earlier versions of the project kept for reference |
 
-## **License**
+## Known limitations
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-### **How to Customize**
-Feel free to **modify or extend** the app as you like. Here are a few ideas:
-- **Add workout tracking functionality** (e.g., logging exercises, sets, and reps).
-- **Improve UI** with more pages for detailed workout logs or progress tracking.
-- **Integrate with external APIs** for exercise data or fitness tracking.
-
----
-
-### **Contributing**
-If you'd like to contribute to this project:
-1. Fork the repository.
-2. Create a new branch for your changes (`git checkout -b feature-xyz`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to your branch (`git push origin feature-xyz`).
-5. Open a pull request.
-
----
-
-### **Contact**
-- Discord: SkellXC
+- KG/LBS toggle in Settings doesn't change anything yet
+- No way to edit or delete a logged set once saved
+- Graph opens in a separate window rather than embedded in the app
